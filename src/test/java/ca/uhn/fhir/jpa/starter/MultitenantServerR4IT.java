@@ -1,12 +1,12 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.model.util.ProviderConstants;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.UrlTenantSelectionInterceptor;
+import ca.uhn.fhir.rest.server.provider.ProviderConstants;
 import ca.uhn.fhir.test.utilities.JettyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -15,13 +15,13 @@ import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultitenantServerR4IT {
 
@@ -37,6 +37,7 @@ public class MultitenantServerR4IT {
     HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4-mt");
     HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
     HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+    HapiProperties.setProperty(HapiProperties.PARTITIONING_ENABLED, "true");
     HapiProperties.setProperty(HapiProperties.PARTITIONING_MULTITENANCY_ENABLED, "true");
     ourCtx = FhirContext.forR4();
   }
@@ -93,12 +94,12 @@ public class MultitenantServerR4IT {
     assertEquals("Family B", pt2.getName().get(0).getFamily());
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     ourServer.stop();
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     String path = Paths.get("").toAbsolutePath().toString();
 
